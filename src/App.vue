@@ -1,10 +1,10 @@
 <script setup>
-import Base from "./views/Base.vue";
+import BaseGeometry from "./views/geometry/BaseGeometry.vue";
 </script>
 
 <template>
   <div>
-    <Base></Base>
+    <BaseGeometry></BaseGeometry>
   </div>
 </template>
 
