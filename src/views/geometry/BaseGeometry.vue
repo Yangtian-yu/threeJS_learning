@@ -28,14 +28,20 @@ onMounted(() => {
   // createLathe();
   // createPlane();
   // createRing();
-  createShape();
+  // createShape();
+  // createTorusKnot();
+  // createTube();
+  createWireframe();
   window.addEventListener("resize", resize);
 });
 
 //#region 创建立方体
 function createBox() {
   const geometry = new THREE.BoxGeometry(1, 1, 1);
-  const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+  const material = new THREE.MeshStandardMaterial({
+    color: 0x00ff00,
+    side: THREE.DoubleSide,
+  });
   const cube = new THREE.Mesh(geometry, material);
   base.scene.add(cube);
 }
@@ -208,6 +214,59 @@ function createShape() {
   let mesh1 = new THREE.Mesh(box1, mat1);
   mesh1.position.set(0, 0, 0);
   base.scene.add(mesh1);
+}
+//#endregion
+
+//#region 圆环缓冲扭结几何体
+function createTorusKnot() {
+  const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+  const material = new THREE.MeshStandardMaterial({
+    color: 0xffff00,
+    side: THREE.DoubleSide,
+  });
+  const torusKnot = new THREE.Mesh(geometry, material);
+  base.scene.add(torusKnot);
+}
+//#endregion
+
+//#region 管道缓冲几何体
+function createTube() {
+  class CustomSinCurve extends THREE.Curve {
+    constructor(scale = 1) {
+      super();
+
+      this.scale = scale;
+    }
+    //t:0-1浮点数
+    getPoint(t, optionalTarget = new THREE.Vector3()) {
+      const tx = t * 3 - 1.5; //-1.5到1.5
+      const ty = Math.sin(2 * Math.PI * t);
+      const tz = 0;
+
+      return optionalTarget.set(tx, ty, tz).multiplyScalar(this.scale);
+    }
+  }
+
+  const path = new CustomSinCurve(10);
+  const geometry = new THREE.TubeGeometry(path, 20, 2, 8, false);
+  const material = new THREE.MeshStandardMaterial({
+    color: 0x00ff00,
+    side: THREE.DoubleSide,
+  });
+  const mesh = new THREE.Mesh(geometry, material);
+  base.scene.add(mesh);
+}
+//#endregion
+
+//#region 网格几何体
+function createWireframe() {
+  const geometry = new THREE.SphereGeometry(1, 100, 100);
+  const wireframe = new THREE.WireframeGeometry(geometry);
+  const line = new THREE.LineSegments(wireframe);
+  line.material.depthTest = false;
+  line.material.opacity = 0.25;
+  line.material.transparent = true;
+  base.scene.add(line);
 }
 //#endregion
 
