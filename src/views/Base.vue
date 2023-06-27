@@ -8,10 +8,16 @@
 import { onMounted, ref } from "vue";
 import Base from "./Base";
 import * as THREE from "three";
-let base;
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+let base, controls;
 const canvasDom = ref(null);
 onMounted(() => {
   base = new Base(canvasDom.value);
+  controls = new OrbitControls(base.camera, base.renderer.domElement);
+  base.addAmbientLight(0.5); //环境光
+  let dirLight = base.addDirLight(0.7); //方向光
+  dirLight.position.set(-10, 10, 10);
+  dirLight.lookAt(0, 0, 0);
   update();
   createBox();
   window.addEventListener("resize", resize);
@@ -19,6 +25,7 @@ onMounted(() => {
 function update() {
   requestAnimationFrame(update);
   base.updated();
+  controls.update();
 }
 function resize() {
   base.resize();

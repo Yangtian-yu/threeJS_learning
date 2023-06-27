@@ -8,7 +8,7 @@ export default class Base {
     this.camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
-      0.001,
+      1, //如果near设置过小，可能导致深度缓冲或者空间分割算法的失败.导致不正确的深度检查，片段遮挡
       10000
     )
     this.camera.position.z = 5

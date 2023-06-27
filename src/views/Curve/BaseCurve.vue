@@ -18,7 +18,7 @@ onMounted(() => {
   // createEllipse();
   // createArc();
   // createCatmullRom3();
-  createCubicBezier();
+  // createCubicBezier();
   createCubicBezier3();
   window.addEventListener("resize", resize);
 });

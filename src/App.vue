@@ -1,10 +1,10 @@
 <script setup>
-import BaseCurve from "./views/Curve/BaseCurve.vue";
+import Css2dLable from "./views/css2d/css2dLable.vue";
 </script>
 
 <template>
   <div>
-    <BaseCurve></BaseCurve>
+    <Css2dLable></Css2dLable>
   </div>
 </template>
 
