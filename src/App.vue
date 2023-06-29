@@ -1,10 +1,10 @@
 <script setup>
-import Css2dLable from "./views/css2d/css2dLable.vue";
+import css3dMolecules from "./views/css3d/css3dMolecules.vue";
 </script>
 
 <template>
   <div>
-    <Css2dLable></Css2dLable>
+    <css3dMolecules></css3dMolecules>
   </div>
 </template>
 
