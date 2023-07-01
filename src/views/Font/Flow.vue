@@ -30,7 +30,7 @@ onMounted(() => {
 
 function update() {
   requestAnimationFrame(update);
-  base.updated();
+  base.update();
   controls.update();
   flow?.moveAlongCurve(-0.002); //参数：代表速度
 }

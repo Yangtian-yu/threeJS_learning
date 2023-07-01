@@ -1,43 +1,44 @@
 import * as THREE from 'three'
-
 export default class Base {
   constructor(canvas) {
     //场景
     this.scene = new THREE.Scene()
-    //摄像机
     this.camera = new THREE.PerspectiveCamera(
-      75,
+      45,
       window.innerWidth / window.innerHeight,
-      1, //如果near设置过小，可能导致深度缓冲或者空间分割算法的失败.导致不正确的深度检查，片段遮挡
-      10000
+      1,
+      1000000
     )
-    this.camera.position.z = 5
+    this.camera.position.set(0, 0, 250)
+    // this.camera.lookAt(0,0,0)
     this.camera.updateProjectionMatrix()
-    //渲染器
-    this.renderer = new THREE.WebGL1Renderer({ canvas, antialias: true })
+    //将场景中的物体
+    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
     this.renderer.setSize(window.innerWidth, window.innerHeight)
-    //使物体更清晰
+    //设置像素比,将他设置为设备像素比
     this.renderer.setPixelRatio(window.devicePixelRatio)
+    this.renderer.setViewport(0, 0, window.innerWidth, window.innerHeight)
+    this.renderer.shadowMap.enabled = true
   }
-  updated() {
+  update() {
     this.renderer.render(this.scene, this.camera)
   }
   //自适应
   resize() {
-    this.camera.aspect = window.innerWidth / window.innerHeight
+    this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix()
     this.renderer.setSize(window.innerWidth, window.innerHeight)
   }
   //添加环境光
-  addAmbientLight(intensity = 1, color = '0xffffff') {
+  addAmbientLight(intensity = 1, color = 0xffffff) {
     let light = new THREE.AmbientLight(color, intensity)
     this.scene.add(light)
-    return light  //修改位置
+    return light;//可以在外部修改一下他的位置等属性
   }
   //添加方向光
-  addDirLight(intensity = 1, color = '0xffffff') {
-    let light = new THREE.DirectionalLight(color, intensity)
+  addDirLight(intensity = 1, color = 0xffffff) {
+    let light = new THREE.DirectionalLight({ intensity, color })
     this.scene.add(light)
-    return light  //修改位置
+    return light;//可以在外部修改一下他的位置等属性
   }
 }

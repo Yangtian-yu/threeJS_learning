@@ -27,7 +27,7 @@ onMounted(() => {
 });
 function update() {
   requestAnimationFrame(update);
-  base.updated();
+  base.update();
   controls.update();
 }
 function resize() {

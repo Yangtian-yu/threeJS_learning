@@ -147,7 +147,7 @@ function createBox() {
 
 function update() {
   requestAnimationFrame(update);
-  base.updated();
+  base.update();
   controls.update();
   mixer?.update(clock.getDelta());
 }

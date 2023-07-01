@@ -1,69 +1,136 @@
-<template>
-  <div>
-    <canvas ref="canvasDom" id="canvasDom"></canvas>
-  </div>
-</template>
-
 <script setup>
-import { onMounted, ref } from "vue";
 import Base from "../Base";
+import { onMounted, onUpdated, ref } from "vue";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import {
   CSS2DRenderer,
   CSS2DObject,
-} from "three/examples/jsm/renderers/CSS2DRenderer.js";
+} from "three/examples/jsm/renderers/CSS2DRenderer";
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
-
-let base, controls, moon, earth, labelrenderer, gui;
-const canvasDom = ref(null);
-let textureLoader = new THREE.TextureLoader();
-
+let canvasDom = ref(null);
+let base, controls, gui, dirlight;
+let moon, earth;
+let labelrenderer = null;
 onMounted(() => {
-  gui = new GUI();
   base = new Base(canvasDom.value);
-  base.camera.position.set(10, 5, 10);
-  createCss2DRenderer();
+  base.camera.position.set(10, 5, 20);
+  base.camera.layers.enableAll();
+  base.camera.updateProjectionMatrix();
+  window.addEventListener("resize", resize);
+  createLabelRenderer();
   controls = new OrbitControls(base.camera, labelrenderer.domElement);
-  base.addAmbientLight(0.6); //环境光
-  let dirLight = base.addDirLight(); //方向光
-  dirLight.position.set(-10, 10, 10);
-  dirLight.lookAt(0, 0, 0);
-  const helper = new THREE.DirectionalLightHelper(dirLight, 5);
-  // base.scene.add(helper);
-  update();
-  const axesHelper = new THREE.AxesHelper(5);
-  base.scene.add(axesHelper);
   createEarth();
   createMoon();
+  base.addAmbientLight(0.6);
+  dirlight = base.addDirLight();
+  dirlight.position.set(-10, 10);
+  dirlight.lookAt(0, 0, 0);
   createGUI();
-  window.addEventListener("resize", resize);
+  update();
 });
-
-let clock = new THREE.Clock();
-let elapsed = 0;
-
-function update() {
-  requestAnimationFrame(update);
-  elapsed = clock.getElapsedTime();
-  // console.log(elapsed);
-  moon?.position.set(Math.sin(elapsed) * 5, 0, Math.cos(elapsed) * 5);
-  base.updated();
-  controls.update();
-  labelrenderer.render(base.scene, base.camera);
+let textureload = new THREE.TextureLoader();
+//创建地球
+function createEarth() {
+  let sphere = new THREE.SphereGeometry(1, 32, 32);
+  let mat = new THREE.MeshPhongMaterial({
+    map: textureload.load("textures/planets/earth_atmos_2048.jpg"),
+    //高光颜色
+    specular: 0x333333,
+    //高光强度
+    shininess: 5,
+    //高光贴图
+    specularMap: textureload.load("textures/planets/earth_specular_2048.jpg"),
+  });
+  earth = new THREE.Mesh(sphere, mat);
+  earth.position.set(0, 0, 0);
+  base.scene.add(earth);
+  earth.layers.enableAll();
+  createEarthCSS2DObject();
 }
-function resize() {
-  base.resize();
+//创建月球
+function createMoon() {
+  let sphere = new THREE.SphereGeometry(0.29, 16, 16);
+  let mat = new THREE.MeshPhongMaterial({
+    map: textureload.load("textures/planets/moon_1024.jpg"),
+    //高光强度
+    shininess: 5,
+  });
+  moon = new THREE.Mesh(sphere, mat);
+  moon.position.set(5, 0, 0);
+  base.scene.add(moon);
+  moon.layers.enableAll();
+  createMoonCSS2DObject();
+}
+//创建labelrenderer
+
+function createLabelRenderer() {
+  //创建一个renderer
+  labelrenderer = new CSS2DRenderer();
+  //设置一下他的宽高
   labelrenderer.setSize(window.innerWidth, window.innerHeight);
+  //将他里面的dom元素设置为浮动，让他可以重叠在canvas上面
+  labelrenderer.domElement.style.position = "absolute";
+  labelrenderer.domElement.style.top = "0";
+  document.body.appendChild(labelrenderer.domElement);
 }
+//创建地球label
+function createEarthCSS2DObject() {
+  //创建一下earth的名称label
+  let earthdiv = document.createElement("div");
+  earthdiv.textContent = "Earth";
+  earthdiv.style.color = "white";
+  earthdiv.style.fontSize = "14px";
+  let earthlabel = new CSS2DObject(earthdiv);
+  earthlabel.position.set(1.5, 0, 0); //相对于父物体的
+  earthlabel.center.set(0, 1);
+  earthlabel.layers.set(1);
+  earth.add(earthlabel);
 
+  //创建一下earth的质量label
+  let earthweg = document.createElement("div");
+  earthweg.textContent = "5.97237e24 kg";
+  earthweg.style.color = "white";
+  earthweg.style.fontSize = "14px";
+  let earthweglabel = new CSS2DObject(earthweg);
+  earthweglabel.position.set(1.5, 0, 0);
+  earthweglabel.center.set(0, 0);
+  earthweglabel.layers.set(2);
+  earth.add(earthweglabel);
+}
+//创建月球label
+function createMoonCSS2DObject() {
+  //创建一下moon的名称label
+  let moondiv = document.createElement("div");
+  moondiv.textContent = "Moon";
+  moondiv.style.color = "white";
+  moondiv.style.fontSize = "12px";
+  moondiv.style.backgroundColor = "transparent";
+  let moonlabel = new CSS2DObject(moondiv);
+  moonlabel.position.set(1.5 * 0.29, 0, 0);
+  moonlabel.center.set(0, 1);
+  moonlabel.layers.set(1);
+  moon.add(moonlabel);
+
+  //创建一下的质量label
+  let moonweg = document.createElement("div");
+  moonweg.textContent = "7.342e22 kg";
+  moonweg.style.color = "white";
+  moonweg.style.fontSize = "12px";
+  //moonweg.style.backgroundColor = 'transparent';
+  let moonweglabel = new CSS2DObject(moonweg);
+  moonweglabel.position.set(1.5 * 0.29, 0, 0);
+  moonweglabel.center.set(0, 0);
+  moonweglabel.layers.set(2);
+  moon.add(moonweglabel);
+}
 //创建gui
 function createGUI() {
   let layers = {
-    "Toggle to layers1": () => {
+    "Toggle to Layers 1": () => {
       base.camera.layers.toggle(1);
     },
-    "Toggle to layers2": () => {
+    "Toggle to Layers 2": () => {
       base.camera.layers.toggle(2);
     },
     enableAll: () => {
@@ -73,124 +140,35 @@ function createGUI() {
       base.camera.layers.disableAll();
     },
   };
-  gui.add(layers, "Toggle to layers1");
-  gui.add(layers, "Toggle to layers2");
+  gui = new GUI();
+  gui.add(layers, "Toggle to Layers 1");
+  gui.add(layers, "Toggle to Layers 2");
   gui.add(layers, "enableAll");
   gui.add(layers, "disableAll");
 }
-
-//创建 css2drenderer
-function createCss2DRenderer() {
-  labelrenderer = new CSS2DRenderer();
+let elapsed;
+let clock = new THREE.Clock();
+function update() {
+  requestAnimationFrame(update);
+  elapsed = clock.getElapsedTime();
+  moon.position.set(Math.sin(elapsed) * 5, 0, Math.cos(elapsed) * 5);
+  controls.update();
+  base.update();
+  labelrenderer.render(base.scene, base.camera);
+}
+function resize() {
+  base.resize();
   labelrenderer.setSize(window.innerWidth, window.innerHeight);
-  labelrenderer.domElement.style.position = "absolute";
-  labelrenderer.domElement.style.top = "0";
-  document.body.appendChild(labelrenderer.domElement);
-}
-
-//创建地球的label
-function createEarthCss2DObject() {
-  let rearthdiv = document.createElement("div");
-  rearthdiv.textContent = "Earth";
-  rearthdiv.style.color = "#ffffff";
-  rearthdiv.style.fontSize = "12px";
-  let obj = new CSS2DObject(rearthdiv);
-  obj.position.set(1.5, 0, 0);
-  obj.center.set(0, 1);
-  obj.layers.set(1);
-  earth.add(obj);
-
-  let rearthwediv = document.createElement("div");
-  rearthwediv.textContent = "5.97237e24 kg";
-  rearthwediv.style.color = "#ffffff";
-  rearthwediv.style.fontSize = "12px";
-  let weiobj = new CSS2DObject(rearthwediv);
-  weiobj.position.set(1.5, 0, 0);
-  weiobj.center.set(0, 0);
-  weiobj.layers.set(2);
-  earth.add(weiobj);
-}
-
-//创建月球的label
-function createMoonCss2DObject() {
-  let moondiv = document.createElement("div");
-  moondiv.textContent = "Moon";
-  moondiv.style.color = "#ffffff";
-  moondiv.style.fontSize = "12px";
-  let obj = new CSS2DObject(moondiv);
-  obj.position.set(0.5, 0, 0);
-  obj.center.set(0, 1);
-  obj.layers.set(1);
-  moon.add(obj);
-
-  let moonwediv = document.createElement("div");
-  moonwediv.textContent = "7.342e22 kg";
-  moonwediv.style.color = "#ffffff";
-  moonwediv.style.fontSize = "12px";
-  let weiobj = new CSS2DObject(moonwediv);
-  weiobj.position.set(0.5, 0, 0);
-  weiobj.center.set(0, 0);
-  weiobj.layers.set(2);
-  moon.add(weiobj);
-}
-
-//月球
-function createMoon() {
-  const geometry = new THREE.SphereGeometry(0.29, 32, 32);
-  const material = new THREE.MeshPhongMaterial({
-    map: textureLoader.load("moon.jpg"),
-    //高光效果
-    //强度
-    shininess: 5,
-  });
-  moon = new THREE.Mesh(geometry, material);
-  moon.position.x = 5;
-  moon.layers.enableAll();
-  createMoonCss2DObject();
-  base.scene.add(moon);
-}
-
-//地球
-function createEarth() {
-  //   构造器
-  // SphereGeometry(radius : Float, widthSegments : Integer, heightSegments : Integer, phiStart : Float, phiLength : Float, thetaStart : Float, thetaLength : Float)
-  // radius — 球体半径，默认为1。
-  // widthSegments — 水平分段数（沿着经线分段），最小值为3，默认值为32。
-  // heightSegments — 垂直分段数（沿着纬线分段），最小值为2，默认值为16。
-  // phiStart — 指定水平（经线）起始角度，默认值为0。。
-  // phiLength — 指定水平（经线）扫描角度的大小，默认值为 Math.PI * 2。
-  // thetaStart — 指定垂直（纬线）起始角度，默认值为0。
-  // thetaLength — 指定垂直（纬线）扫描角度大小，默认值为 Math.PI。
-  // 该几何体是通过扫描并计算围绕着Y轴（水平扫描）和X轴（垂直扫描）的顶点来创建的。
-  //  因此，不完整的球体（类似球形切片）可以通过为phiStart，phiLength，
-  //  thetaStart和thetaLength设置不同的值来创建， 以定义我们开始（或结束）计算这些顶点的起点（或终点）。
-  const geometry = new THREE.SphereGeometry(1, 32, 32);
-  const material = new THREE.MeshPhongMaterial({
-    map: textureLoader.load("earth.jpg"),
-    //高光效果
-    //颜色
-    specular: 0x333333,
-    //强度
-    shininess: 5,
-    //高光贴图   黑白图片，白色代表高光，黑色不会反射高光
-    specularMap: null,
-    //specularMap:textureLoader.load("***"),
-    // 法线贴图
-    normalMap: null,
-    // normalMap:textureLoader.load("***")
-    //法线贴图对物体的影响
-    // normalScale:
-  });
-  earth = new THREE.Mesh(geometry, material);
-  earth.layers.enableAll();
-  createEarthCss2DObject();
-  base.scene.add(earth);
 }
 </script>
 
+<template>
+  <canvas ref="canvasDom" class="canvasDom"></canvas>
+</template>
+
 <style scoped>
-#canvasDom {
-  width: 100%;
-  height: 100%;
+.canvasDom {
+  width: 100vw;
+  height: 100vh;
 }
 </style>
