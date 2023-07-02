@@ -91,6 +91,7 @@ function createMaterial() {
   // 1<<24   1*2^24
   //0xffffff  16^6
   //随机颜色
+  console.log("---");
   return THREE.MeshStandardMaterial({ color: Math.random() * (1 << 24) });
 }
 
