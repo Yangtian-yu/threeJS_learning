@@ -105,6 +105,38 @@ const routers = [
     },
     component: () => import('../views/Ammo/Ammo1.vue'),
   },
+  {
+    name: "Ammo2",
+    path: "/ammo/Ammo2",
+    meta: {
+      title: "物理渲染引擎案例2"
+    },
+    component: () => import('../views/Ammo/Ammo2.vue'),
+  },
+  {
+    name: "softAmmo",
+    path: "/ammo/softAmmo",
+    meta: {
+      title: "物理渲染引擎案例3"
+    },
+    component: () => import('../views/Ammo/softAmmo.vue'),
+  },
+  {
+    name: "softAmmo1",
+    path: "/ammo/softAmmo1",
+    meta: {
+      title: "物理渲染引擎案例4"
+    },
+    component: () => import('../views/Ammo/softAmmo1.vue'),
+  },
+  {
+    name: "softAmmofially",
+    path: "/ammo/softAmmofially",
+    meta: {
+      title: "物理渲染引擎案例终"
+    },
+    component: () => import('../views/Ammo/softAmmofially.vue'),
+  },
 ]
 
 const router = createRouter({
