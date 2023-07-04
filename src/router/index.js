@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Base from "../views/Base.vue"
-const routers = [
+import Main from '../views/main/main.vue'
+// 哔哩哔哩课程
+const baserouter = [
   {
     name: "base",
     path: "/",
@@ -138,6 +140,45 @@ const routers = [
     component: () => import('../views/Ammo/softAmmofially.vue'),
   },
 ]
+//老陈打码视频
+const newRouter = [
+  {
+    name: "base",
+    path: "/",
+    meta: {
+      title: "基础"
+    },
+    component: Main,
+  },
+  {
+    name: "main01",
+    path: "/main/main01",
+    meta: {
+      title: "添加控制器"
+    },
+    component: () => import('../views/main/main01.vue'),
+  },
+  {
+    name: "main02",
+    path: "/main/main02",
+    meta: {
+      title: "添加辅助线"
+    },
+    component: () => import('../views/main/main02.vue'),
+  },
+  {
+    name: "main03",
+    path: "/main/main03",
+    meta: {
+      title: "基础应用"
+    },
+    component: () => import('../views/main/main03.vue'),
+  },
+]
+
+
+const routers = newRouter
+
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),

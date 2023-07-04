@@ -6,7 +6,6 @@ const routes = router.options.routes;
 const routerTo = (path) => {
   _router.push(path);
 };
-console.log(router);
 </script>
 
 <template>
