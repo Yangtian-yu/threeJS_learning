@@ -16,7 +16,6 @@ const routerTo = (path) => {
       </li>
     </ul>
   </div>
-
   <router-view></router-view>
 </template>
 
