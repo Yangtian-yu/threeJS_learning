@@ -170,9 +170,25 @@ const newRouter = [
     name: "main03",
     path: "/main/main03",
     meta: {
-      title: "基础应用"
+      title: "旋转缩放移动基础应用"
     },
     component: () => import('../views/main/main03.vue'),
+  },
+  {
+    name: "main04",
+    path: "/main/main04",
+    meta: {
+      title: "gasp库使用"
+    },
+    component: () => import('../views/main/main04.vue'),
+  },
+  {
+    name: "main06",
+    path: "/main/main06",
+    meta: {
+      title: "材质"
+    },
+    component: () => import('../views/main/main06.vue'),
   },
 ]
 

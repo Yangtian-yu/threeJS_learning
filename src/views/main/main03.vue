@@ -9,6 +9,7 @@ import Base from "../Base";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 let base, controls;
 const canvasDom = ref(null);
+
 onMounted(() => {
   base = new Base(canvasDom.value);
   controls = new OrbitControls(base.camera, base.renderer.domElement);
@@ -42,21 +43,39 @@ function resize() {
   base.resize();
 }
 
+// 设置时钟
+const clock = new THREE.Clock();
+
 function update() {
   const mesh = base.scene.children[0];
+
   //#region 物体移动
-  mesh.position.x += 0.01;
-  if (mesh.position.x > 5) {
-    mesh.position.x = 0.5;
-  }
+  // mesh.position.x += 0.01;
+  // if (mesh.position.x > 5) {
+  //   mesh.position.x = 0.5;
+  // }
+  //按照帧率运动
+  // let t = (time / 1000) % 5;
+  // mesh.position.x = t * 1;
   //#endregion
 
   //#region 物体 缩放
   // mesh.scale.set(3, 2, 1);
   // mesh.scale.x = 5;
   //#endregion
+
   //#region 物体 旋转
-  mesh.rotation.set(Math.PI / 4, 0, 0);
+  // mesh.rotation.set(Math.PI / 4, 0, 0);
+  //#endregion
+
+  //#region   threejs自带时钟 clock
+  //获取时间的总时长
+  let time = clock.getElapsedTime();
+  let t = time % 5;
+  mesh.position.x = t * 1;
+  // let deltaTime = clock.getDelta();
+  // console.log("时钟运行总时长:", time);
+  // console.log("两次获取时间的间隔时间:", deltaTime); //0
   //#endregion
 
   requestAnimationFrame(update);

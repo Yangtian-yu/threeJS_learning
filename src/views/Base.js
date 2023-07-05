@@ -28,6 +28,7 @@ export default class Base {
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix()
     this.renderer.setSize(window.innerWidth, window.innerHeight)
+    this.renderer.setPixelRatio(window.devicePixelRatio)
   }
   //添加环境光
   addAmbientLight(intensity = 1, color = 0xffffff) {
