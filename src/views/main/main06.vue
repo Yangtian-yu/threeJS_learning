@@ -25,11 +25,31 @@ onMounted(() => {
 const addTexture = () => {
   //导入纹理
   const textureLoader = new THREE.TextureLoader();
-  textureLoader.load();
+  const doorColorTexture = textureLoader.load("matter/textures/door/color.jpg");
+  const texture = textureLoader.load("matter/textures/minecraft.png");
+  //设置纹理偏移
+  // doorColorTexture.offset.x = 0.5;
+  // doorColorTexture.offset.y = 0.5;
+  // doorColorTexture.offset.set(0.5,0.5)
+  //设置旋转的原点
+  // doorColorTexture.center.set(0.5, 0.5);
+  //设置纹理的旋转 旋转45deg
+  // doorColorTexture.rotation = Math.PI / 4;
+  //设置纹理的重复
+  // doorColorTexture.repeat.set(2, 3);
+  //设置纹理重复的模式
+  // doorColorTexture.wrapS = THREE.MirroredRepeatWrapping;
+  // doorColorTexture.wrapT = THREE.RepeatWrapping;
+
+  //textTure纹理显示设置
+  texture.minFilter = THREE.NearestFilter;
+  texture.magFilter = THREE.NearestFilter;
+
   const geo = new THREE.BoxGeometry(1, 1, 1);
   //材质
   const mat = new THREE.MeshBasicMaterial({
     color: 0xffff00,
+    map: texture,
   });
   const mesh = new THREE.Mesh(geo, mat);
   base.scene.add(mesh);
