@@ -186,9 +186,33 @@ const newRouter = [
     name: "main06",
     path: "/main/main06",
     meta: {
-      title: "材质"
+      title: "基础材质贴图"
     },
     component: () => import('../views/main/main06.vue'),
+  },
+  {
+    name: "main07",
+    path: "/main/main07",
+    meta: {
+      title: "光线与标准材质"
+    },
+    component: () => import('../views/main/main07.vue'),
+  },
+  {
+    name: "main08",
+    path: "/main/main08",
+    meta: {
+      title: "环境贴图"
+    },
+    component: () => import('../views/main/main08.vue'),
+  },
+  {
+    name: "main09",
+    path: "/main/main09",
+    meta: {
+      title: "灯光与阴影"
+    },
+    component: () => import('../views/main/main09.vue'),
   },
 ]
 

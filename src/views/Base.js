@@ -18,7 +18,7 @@ export default class Base {
     //设置像素比,将他设置为设备像素比
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setViewport(0, 0, window.innerWidth, window.innerHeight)
-    this.renderer.shadowMap.enabled = true
+    this.renderer.shadowMap.enabled = true  //开启渲染阴影计算
   }
   update() {
     this.renderer.render(this.scene, this.camera)

@@ -18,6 +18,7 @@ onMounted(() => {
   base.camera.position.set(0, 0, 10);
   addTexture();
   createAxesHelper();
+  createPlane();
   update();
   window.addEventListener("resize", resize);
 });
@@ -26,7 +27,12 @@ const addTexture = () => {
   //导入纹理
   const textureLoader = new THREE.TextureLoader();
   const doorColorTexture = textureLoader.load("matter/textures/door/color.jpg");
-  const texture = textureLoader.load("matter/textures/minecraft.png");
+  const doorAplhaTexture = textureLoader.load("matter/textures/door/alpha.jpg");
+  const doorAmbientTexture = textureLoader.load(
+    "matter/textures/door/ambientOcclusion.jpg"
+  );
+
+  // const texture = textureLoader.load("matter/textures/minecraft.png");
   //设置纹理偏移
   // doorColorTexture.offset.x = 0.5;
   // doorColorTexture.offset.y = 0.5;
@@ -42,17 +48,55 @@ const addTexture = () => {
   // doorColorTexture.wrapT = THREE.RepeatWrapping;
 
   //textTure纹理显示设置
-  texture.minFilter = THREE.NearestFilter;
-  texture.magFilter = THREE.NearestFilter;
+  // texture.minFilter = THREE.NearestFilter;
+  // texture.magFilter = THREE.NearestFilter;
+  // texture.minFilter = THREE.LinearFilter;
+  // texture.magFilter = THREE.LinearFilter;
 
-  const geo = new THREE.BoxGeometry(1, 1, 1);
+  const geo = new THREE.BoxGeometry(1, 1, 1, 100, 100, 100);
   //材质
   const mat = new THREE.MeshBasicMaterial({
-    color: 0xffff00,
-    map: texture,
+    color: "#ffff00",
+    map: doorColorTexture,
+    alphaMap: doorAplhaTexture,
+    transparent: true,
+    aoMap: doorAmbientTexture,
+    aoMapIntensity: 1,
+    side: THREE.DoubleSide,
   });
   const mesh = new THREE.Mesh(geo, mat);
   base.scene.add(mesh);
+  //mesh设置第二组uv
+  geo.setAttribute(
+    "uv2",
+    new THREE.BufferAttribute(geo.attributes.uv.array, 2)
+  );
+};
+
+const createPlane = () => {
+  const textureLoader = new THREE.TextureLoader();
+  const doorColorTexture = textureLoader.load("matter/textures/door/color.jpg");
+  const doorAmbientTexture = textureLoader.load(
+    "matter/textures/door/ambientOcclusion.jpg"
+  );
+  const plane = new THREE.PlaneBufferGeometry(1, 1);
+  const mat = new THREE.MeshBasicMaterial({
+    map: doorColorTexture,
+    color: 0xffff00,
+    // opacity: 0.3,
+    transparent: true,
+    side: THREE.DoubleSide,
+    aoMap: doorAmbientTexture,
+  });
+  const mesh = new THREE.Mesh(plane, mat);
+  mesh.position.set(3, 0, 0);
+
+  base.scene.add(mesh);
+  //给平面设置第二组uv
+  plane.setAttribute(
+    "uv",
+    new THREE.BufferAttribute(plane.attributes.uv.array, 2)
+  );
 };
 
 const createAxesHelper = () => {
