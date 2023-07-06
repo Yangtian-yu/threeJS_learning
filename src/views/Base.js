@@ -4,9 +4,9 @@ export default class Base {
     //场景
     this.scene = new THREE.Scene()
     this.camera = new THREE.PerspectiveCamera(
-      45,
+      75,
       window.innerWidth / window.innerHeight,
-      1,
+      0.1,
       1000000
     )
     this.camera.position.set(0, 0, 250)
@@ -19,6 +19,7 @@ export default class Base {
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setViewport(0, 0, window.innerWidth, window.innerHeight)
     this.renderer.shadowMap.enabled = true  //开启渲染阴影计算
+    // this.renderer.physicallyCorrectLights = true //开启物理上的正确光照模式
   }
   update() {
     this.renderer.render(this.scene, this.camera)
@@ -33,6 +34,18 @@ export default class Base {
   //添加环境光
   addAmbientLight(intensity = 1, color = 0xffffff) {
     let light = new THREE.AmbientLight(color, intensity)
+    this.scene.add(light)
+    return light;//可以在外部修改一下他的位置等属性
+  }
+  //添加点光源
+  addPointLight(intensity = 1, color = 0xffffff) {
+    let light = new THREE.PointLight(color, intensity)
+    this.scene.add(light)
+    return light;//可以在外部修改一下他的位置等属性
+  }
+  //添加聚光灯
+  addSpotLight(intensity = 1, color = 0xffffff) {
+    let light = new THREE.SpotLight(color, intensity)
     this.scene.add(light)
     return light;//可以在外部修改一下他的位置等属性
   }

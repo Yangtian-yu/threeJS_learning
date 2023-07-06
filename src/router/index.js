@@ -214,6 +214,22 @@ const newRouter = [
     },
     component: () => import('../views/main/main09.vue'),
   },
+  {
+    name: "main10",
+    path: "/main/main10",
+    meta: {
+      title: "聚光灯"
+    },
+    component: () => import('../views/main/main10.vue'),
+  },
+  {
+    name: "main11",
+    path: "/main/main11",
+    meta: {
+      title: "点光源"
+    },
+    component: () => import('../views/main/main11.vue'),
+  },
 ]
 
 

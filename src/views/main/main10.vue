@@ -14,33 +14,27 @@ const canvasDom = ref(null);
 onMounted(() => {
   base = new Base(canvasDom.value);
   base.addAmbientLight(0.5);
-  let dirLight = base.addDirLight(0.5);
+  let dirLight = base.addSpotLight(0.5);
   dirLight.position.set(5, 5, 5);
   dirLight.castShadow = true; //可以投射阴影
   //设置阴影贴图模糊度
   dirLight.shadow.radius = 20;
+  dirLight.intensity = 2;
   //设置阴影贴图的分辨率
   dirLight.shadow.mapSize.set(4096, 4096);
-  //设置平行光投射相机的属性
-  dirLight.shadow.camera.naer = 0.5;
-  dirLight.shadow.camera.far = 500;
-  dirLight.shadow.camera.top = 5;
-  dirLight.shadow.camera.bottom = -5;
-  dirLight.shadow.camera.left = -5;
-  dirLight.shadow.camera.right = 5;
   controls = new OrbitControls(base.camera, base.renderer.domElement);
   //设置控制器的阻尼，让控制器更有真实效果
   controls.enableDamping = true;
   base.camera.position.set(0, 0, 5);
   createAxesHelper();
-  createSphere();
+  let sphere = createSphere(dirLight);
   createPlane();
-  createGUI(dirLight);
+  createGUI(dirLight, sphere);
   update();
   window.addEventListener("resize", resize);
 });
 
-const createSphere = () => {
+const createSphere = (dirLight) => {
   const geo = new THREE.SphereBufferGeometry(1, 20, 20);
   const mat = new THREE.MeshStandardMaterial({
     side: THREE.DoubleSide,
@@ -48,23 +42,26 @@ const createSphere = () => {
   const mesh = new THREE.Mesh(geo, mat);
   mesh.receiveShadow = true;
   mesh.castShadow = true;
+  dirLight.target = mesh;
   base.scene.add(mesh);
+  return mesh;
 };
 
-const createGUI = (dirLight) => {
+const createGUI = (dirLight, sphere) => {
   gui = new GUI();
+  gui.add(sphere.position, "x").min(-5).max(5).step(0.1);
   gui
-    .add(dirLight.shadow.camera, "near")
+    .add(dirLight, "angle")
     .min(0)
-    .max(10)
-    .step(0.1)
-    .onChange(() => {
-      dirLight.shadow.camera.updateProjectionMatrix();
-    });
+    .max(Math.PI / 2)
+    .step(0.01);
+  gui.add(dirLight, "distance").min(0).max(10).step(0.01);
+  gui.add(dirLight, "penumbra").min(0).max(1).step(0.01);
+  gui.add(dirLight, "decay").min(0).max(5).step(0.01);
 };
 
 const createPlane = () => {
-  const geo = new THREE.PlaneBufferGeometry(10, 10);
+  const geo = new THREE.PlaneBufferGeometry(500, 500);
   const mat = new THREE.MeshStandardMaterial({
     side: THREE.DoubleSide,
   });
