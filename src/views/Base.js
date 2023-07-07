@@ -8,6 +8,7 @@ export default class Base {
       window.innerWidth / window.innerHeight,
       0.1,
       1000000
+      // 40
     )
     this.camera.position.set(0, 0, 250)
     // this.camera.lookAt(0,0,0)

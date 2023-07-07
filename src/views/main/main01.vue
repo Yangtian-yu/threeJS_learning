@@ -22,7 +22,6 @@ scene.add(camera);
 onMounted(() => {
   initRender();
   createBox();
-
   controls = new OrbitControls(camera, renderer.domElement);
   render();
 });

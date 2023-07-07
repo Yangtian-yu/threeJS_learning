@@ -83,7 +83,7 @@ const dblclick = () => {
     animate1.resume();
   }
   //#endregion
-
+  // matter/textures/particles/1.png
   //#region  控制全屏
   const fullscreenElelment = document.fullscreenElement;
   if (!fullscreenElelment) {

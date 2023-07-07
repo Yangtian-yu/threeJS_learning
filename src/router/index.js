@@ -230,6 +230,46 @@ const newRouter = [
     },
     component: () => import('../views/main/main11.vue'),
   },
+  {
+    name: "particle1",
+    path: "/particle/particle1",
+    meta: {
+      title: "点光源"
+    },
+    component: () => import('../views/particle/particle1.vue'),
+  },
+  {
+    name: "particle2",
+    path: "/particle/particle2",
+    meta: {
+      title: "银河"
+    },
+    component: () => import('../views/particle/particle2.vue'),
+  },
+  {
+    name: "particle3",
+    path: "/particle/particle3",
+    meta: {
+      title: "雪花"
+    },
+    component: () => import('../views/particle/particle3.vue'),
+  },
+  {
+    name: "particle4",
+    path: "/particle/particle4",
+    meta: {
+      title: "臂旋星系"
+    },
+    component: () => import('../views/particle/particle4.vue'),
+  },
+  {
+    name: "main12",
+    path: "/main/main12",
+    meta: {
+      title: "光线投射实现物体交互"
+    },
+    component: () => import('../views/main/main12.vue'),
+  },
 ]
 
 
