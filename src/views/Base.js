@@ -14,13 +14,18 @@ export default class Base {
     // this.camera.lookAt(0,0,0)
     this.camera.updateProjectionMatrix()
     //将场景中的物体
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
+    this.renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true,
+      alpha: true  //设置为透明
+    })
     this.renderer.setSize(window.innerWidth, window.innerHeight)
     //设置像素比,将他设置为设备像素比
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setViewport(0, 0, window.innerWidth, window.innerHeight)
     this.renderer.shadowMap.enabled = true  //开启渲染阴影计算
     // this.renderer.physicallyCorrectLights = true //开启物理上的正确光照模式
+
   }
   update() {
     this.renderer.render(this.scene, this.camera)

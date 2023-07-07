@@ -8,6 +8,7 @@ import * as THREE from "three";
 import Base from "../Base";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 let base, controls;
+
 const canvasDom = ref(null);
 
 onMounted(() => {
@@ -24,6 +25,7 @@ const createInteractionScene = () => {
   //100个立方体
   let cubeArr = [];
   const geo = new THREE.BoxBufferGeometry(1, 1, 1);
+  delete geo.attributes.uv;
   const mat = new THREE.MeshBasicMaterial({
     wireframe: true,
   });
@@ -38,17 +40,35 @@ const createInteractionScene = () => {
       }
     }
   }
-
-  //创建投射光线对象
-  const raycaster = new THREE.Raycaster();
-
   //鼠标的位置对象
   const mouse = new THREE.Vector2();
+  //创建投射光线对象
+  const raycaster = new THREE.Raycaster();
+  // //监听鼠标的位置
+  // window.addEventListener("mousemove", (e) => {
+  //   mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  //   mouse.y = -((e.clientY / window.innerHeight) * 2 - 1);
+  //   // 通过摄像机和鼠标位置更新射线
+  //   raycaster.setFromCamera(mouse, base.camera);
+  //   // // 计算物体和射线的焦点
+  //   let result = raycaster.intersectObjects(cubeArr);
+  //   if (result.length) {
+  //     result[0].object.material = redMat;
+  //   }
+  // });
 
-  //监听鼠标的位置
-  window.addEventListener("mousemove", (e) => {
-    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = (e.clientX / window.innerWidth) * 2 - 1;
+  // 监听鼠标的位置
+  window.addEventListener("click", (event) => {
+    //   console.log(event);
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -((event.clientY / window.innerHeight) * 2 - 1);
+    raycaster.setFromCamera(mouse, base.camera);
+    let result = raycaster.intersectObjects(cubeArr);
+    //   console.log(result);
+    //   result[0].object.material = redMaterial;
+    result.forEach((item) => {
+      item.object.material = redMat;
+    });
   });
 };
 

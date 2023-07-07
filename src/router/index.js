@@ -270,6 +270,14 @@ const newRouter = [
     },
     component: () => import('../views/main/main12.vue'),
   },
+  {
+    name: "fullScroll",
+    path: "/fullScroll",
+    meta: {
+      title: "滑动页面"
+    },
+    component: () => import('../views/fullScroll/index.vue'),
+  },
 ]
 
 
