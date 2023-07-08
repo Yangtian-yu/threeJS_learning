@@ -16,8 +16,8 @@ export default class Base {
     //将场景中的物体
     this.renderer = new THREE.WebGLRenderer({
       canvas,
-      antialias: true,
-      alpha: true  //设置为透明
+      antialias: true, //是否执行抗锯齿。默认为false.
+      // alpha: true  //设置为透明   fullScroll页面中 设置为ture 其他为false
     })
     this.renderer.setSize(window.innerWidth, window.innerHeight)
     //设置像素比,将他设置为设备像素比

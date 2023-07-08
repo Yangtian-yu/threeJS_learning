@@ -2,15 +2,15 @@
   <div class="container">
     <div class="page page0">
       <h1>Ray投射光线</h1>
-      <h3>THREE.Raycaster实现3d交互效果</h3>
+      <h4>THREE.Raycaster实现3d交互效果</h4>
     </div>
     <div class="page page1">
       <h1>THREE.BufferGeometry！</h1>
-      <h3>应用打造酷炫的三角形</h3>
+      <h4>应用打造酷炫的三角形</h4>
     </div>
     <div class="page page2">
       <h1>活泼点光源</h1>
-      <h3>点光源围绕照亮小球</h3>
+      <h4>点光源围绕照亮小球</h4>
     </div>
     <canvas ref="canvasDom" id="canvasDom"></canvas>
   </div>
@@ -20,8 +20,17 @@
 import { onMounted, ref } from "vue";
 import * as THREE from "three";
 import Base from "../Base";
+// 导入动画库
+import gsap from "gsap";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-let base, controls, cubeGroup, sjxGroup, sphereGroup, arrGroup, smallBall;
+let base,
+  controls,
+  cubeGroup,
+  sjxGroup,
+  sphereGroup,
+  arrGroup,
+  smallBall,
+  mouse;
 
 const canvasDom = ref(null);
 
@@ -49,7 +58,7 @@ const createInteractionScene = () => {
     for (let j = 0; j < 5; j++) {
       for (let z = 0; z < 5; z++) {
         const cube = new THREE.Mesh(geo, mat);
-        cube.position.set(i * 2 - 5, j * 2 - 5, z * 2 - 5);
+        cube.position.set(i * 2 - 4, j * 2 - 4, z * 2 - 4);
         cubeGroup.add(cube);
         cubeArr.push(cube);
       }
@@ -143,7 +152,7 @@ const createInteractionScene = () => {
   arrGroup = [cubeGroup, sjxGroup, sphereGroup];
 
   //鼠标的位置对象
-  const mouse = new THREE.Vector2();
+  mouse = new THREE.Vector2();
   //创建投射光线对象
   const raycaster = new THREE.Raycaster();
   // 监听鼠标的位置
@@ -166,8 +175,52 @@ const createInteractionScene = () => {
     if (newPage != currentPage) {
       currentPage = newPage;
       console.log("改变页面，当前是：" + currentPage);
-      // console.log(arrGroup[currentPage].rotation);
+      gsap.to(arrGroup[currentPage].rotation, {
+        z: "+=" + Math.PI * 2,
+        x: "+=" + Math.PI * 2,
+        duration: 2,
+      });
+      gsap.fromTo(
+        `.page${currentPage} h1`,
+        { x: -300 },
+        { x: 0, rotate: "+=360", duration: 1 }
+      );
     }
+  });
+
+  // 监听鼠标的位置
+  window.addEventListener("mousemove", (event) => {
+    mouse.x = event.clientX / window.innerWidth - 0.5;
+    mouse.y = event.clientY / window.innerHeight - 0.5;
+  });
+
+  gsap.to(cubeGroup.rotation, {
+    x: "+=" + Math.PI * 2,
+    y: "+=" + Math.PI * 2,
+    duration: 10,
+    ease: "power2.inOut",
+    repeat: -1,
+  });
+  gsap.to(sjxGroup.rotation, {
+    x: "-=" + Math.PI * 2,
+    z: "+=" + Math.PI * 2,
+    duration: 12,
+    ease: "power2.inOut",
+    repeat: -1,
+  });
+  gsap.to(smallBall.position, {
+    x: -3,
+    duration: 6,
+    ease: "power2.inOut",
+    repeat: -1,
+    yoyo: true,
+  });
+  gsap.to(smallBall.position, {
+    y: 0,
+    duration: 0.5,
+    ease: "power2.inOut",
+    repeat: -1,
+    yoyo: true,
   });
 };
 
@@ -184,18 +237,20 @@ const clock = new THREE.Clock();
 
 function update() {
   const time = clock.getElapsedTime();
-  cubeGroup.rotation.x = time * 0.5;
-  cubeGroup.rotation.y = time * 0.5;
-  sjxGroup.rotation.x = time * 0.5;
-  sjxGroup.rotation.y = time * 0.5;
-  smallBall.position.x = Math.sin(time) * 3;
-  smallBall.position.z = Math.cos(time) * 3;
-  smallBall.position.y = 2 + Math.sin(time * 10) / 2;
-  sphereGroup.rotation.z = Math.sin(time) * 0.05;
-  sphereGroup.rotation.x = Math.sin(time) * 0.05;
+
+  // cubeGroup.rotation.x = time * 0.5;
+  // cubeGroup.rotation.y = time * 0.5;
+  // sjxGroup.rotation.x = time * 0.5;
+  // sjxGroup.rotation.y = time * 0.5;
+  // smallBall.position.x = Math.sin(time) * 3;
+  // smallBall.position.z = Math.cos(time) * 3;
+  // smallBall.position.y = 2 + Math.sin(time * 10) / 2;
+  // sphereGroup.rotation.z = Math.sin(time) * 0.05;
+  // sphereGroup.rotation.x = Math.sin(time) * 0.05;
   //根据当前滚动的scrollY，去设置相机移动的位置
   base.camera.position.y = -(window.scrollY / window.innerHeight) * 30;
-  // base.camera.position.x += (mouse.x * 10 - camera.position.x) * deltaTime * 5;
+  base.camera.position.x += (mouse.x * 10 - base.camera.position.x) * 0.1;
+
   base.update();
   // controls.update();
   requestAnimationFrame(update);
@@ -227,8 +282,8 @@ function update() {
   /* z-index: 20; */
 }
 .page h1 {
-  margin: 60px;
-  font-size: 40px;
+  margin: 30px;
+  font-size: 30px;
 }
 
 .page h3 {

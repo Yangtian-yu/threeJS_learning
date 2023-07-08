@@ -19,7 +19,7 @@ const routerTo = (path) => {
   <router-view></router-view>
 </template>
 
-<style scoped>
+<style>
 .menu {
   position: fixed;
   height: 100vh;
@@ -45,5 +45,8 @@ const routerTo = (path) => {
   margin-block-start: 0;
   margin-block-end: 0;
   padding-inline-start: 0;
+}
+::-webkit-scrollbar {
+  display: none;
 }
 </style>

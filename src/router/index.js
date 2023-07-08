@@ -272,11 +272,20 @@ const newRouter = [
   },
   {
     name: "fullScroll",
-    path: "/fullScroll",
+    path: "/fullScroll/fullScroll",
     meta: {
-      title: "滑动页面"
+      title: "全屏滑动案例"
     },
     component: () => import('../views/fullScroll/index.vue'),
+  },
+
+  {
+    name: "physics01",
+    path: "/physics01",
+    meta: {
+      title: "物理引擎案例"
+    },
+    component: () => import('../views/physics/physics01.vue'),
   },
 ]
 
