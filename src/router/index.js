@@ -278,7 +278,6 @@ const newRouter = [
     },
     component: () => import('../views/fullScroll/index.vue'),
   },
-
   {
     name: "physics01",
     path: "/physics01",
@@ -286,6 +285,14 @@ const newRouter = [
       title: "物理引擎案例"
     },
     component: () => import('../views/physics/physics01.vue'),
+  },
+  {
+    name: "newCurve",
+    path: "/newCurve",
+    meta: {
+      title: "曲线应用"
+    },
+    component: () => import('../views/newCurve/curve.vue'),
   },
 ]
 

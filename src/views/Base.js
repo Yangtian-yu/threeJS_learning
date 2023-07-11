@@ -58,6 +58,7 @@ export default class Base {
   //添加方向光
   addDirLight(intensity = 1, color = 0xffffff) {
     let light = new THREE.DirectionalLight({ intensity, color })
+    light.castShadow = true //开启阴影
     this.scene.add(light)
     return light;//可以在外部修改一下他的位置等属性
   }
