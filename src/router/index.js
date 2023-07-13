@@ -294,6 +294,30 @@ const newRouter = [
     },
     component: () => import('../views/newCurve/curve.vue'),
   },
+  {
+    name: "shader1",
+    path: "/shader1",
+    meta: {
+      title: "着色器"
+    },
+    component: () => import('../views/shader/shader1.vue'),
+  },
+  {
+    name: "smartCity",
+    path: "/smartCity",
+    meta: {
+      title: "mini智慧城市"
+    },
+    component: () => import('../views/smartCity/index.vue'),
+  },
+  {
+    name: "smartPark",
+    path: "/smartPark",
+    meta: {
+      title: "mini智慧园区"
+    },
+    component: () => import('../views/SmartPark/index.vue'),
+  },
 ]
 
 
