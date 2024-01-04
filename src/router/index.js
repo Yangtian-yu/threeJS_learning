@@ -303,6 +303,14 @@ const newRouter = [
     component: () => import('../views/shader/shader1.vue'),
   },
   {
+    name: "shader2",
+    path: "/shader2",
+    meta: {
+      title: "着色器2"
+    },
+    component: () => import('../views/shader/shader2.vue'),
+  },
+  {
     name: "smartCity",
     path: "/smartCity",
     meta: {

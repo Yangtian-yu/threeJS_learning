@@ -26,6 +26,7 @@ onMounted(() => {
     vertexShader,
     `
   attribute vec4 a_position;
+  uniform vec4 u_mat;
   void main() {
     gl_Position = a_position;
   }
@@ -77,6 +78,8 @@ onMounted(() => {
 
   //绘制三角形
   gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+  //卡住   不往下面走了
 
   const scale = {
     x: 0.5,
