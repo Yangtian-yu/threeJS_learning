@@ -21,7 +21,7 @@ onMounted(() => {
   dirlight.position.set(10, 100, 10);
   dirlight.lookAt(0, 0, 0);
   addBackground();
-  createAxesHelper();
+  // createAxesHelper();
   update();
   window.addEventListener("resize", resize);
 });
@@ -47,6 +47,7 @@ function resize() {
 function update() {
   requestAnimationFrame(update);
   base.update();
+
   controls.update();
 }
 </script>
